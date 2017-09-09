@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.dao.IUserDao">
+    <select id="getAllUser" resultType="org.lanqiao.bean.User">
+        select User_id as userId , User_name as userName , User_Pwd as userPwd  from userInfo
+    </select>
+    <select id="findUserByCondition" parameterType="org.lanqiao.bean.User" resultType="org.lanqiao.bean.User">
+        select user_id as userId , user_name as userName , User_pwd as userPwd from userinfo where 1=1
+        <if test="userId != null &amp;&amp; !&quot;&quot;.equals(userId)">
+          and  User_id = #{userId}
+        </if>
+        <if test="userName != null &amp;&amp; !&quot;&quot;.equals(userName)">
+          and  user_name like #{userName}
+        </if>
+        <if test="userPwd != null &amp;&amp; !&quot;&quot;.equals(userPwd)">
+            and  user_pwd like #{userPwd}
+        </if>
+
+
+
+    </select>
+    <!--根据条件更新用户-->
+    <update id="updateUserByCond" parameterType="org.lanqiao.bean.User">
+        UPDATE userinfo
+        <set>
+            <if test="userName != null &amp;&amp; !&quot;&quot;.equals(userName)" >
+                user_name = #{userName}
+            </if>
+            <if test="userPwd != null &amp;&amp; !&quot;&quot;.equals(userPwd)" >
+                user_pwd = #{userPwd}
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+    <select id="getUserIn" resultType="org.lanqiao.bean.User">
+        select User_id as userId , User_name as userName , User_pwd as userPwd  from userInfo WHERE User_id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>
